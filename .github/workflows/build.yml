@@ -12,26 +12,18 @@ on:
 
   workflow_dispatch:
     inputs:
-      platform:
+      build_target:
         description: "What do you want to build?"
         required: true
         default: "web"
         type: choice
         options:
           - web
-          - android
+          - android-apk
+          - android-aab
+          - android-both
           - windows
           - all
-
-      android_output:
-        description: "Android output type"
-        required: true
-        default: "both"
-        type: choice
-        options:
-          - apk
-          - aab
-          - both
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
@@ -52,8 +44,8 @@ jobs:
 
     if: |
       github.event_name == 'push' ||
-      github.event.inputs.platform == 'web' ||
-      github.event.inputs.platform == 'all'
+      github.event.inputs.build_target == 'web' ||
+      github.event.inputs.build_target == 'all'
 
     environment:
       name: github-pages
@@ -92,8 +84,10 @@ jobs:
     runs-on: ubuntu-latest
 
     if: |
-      github.event.inputs.platform == 'android' ||
-      github.event.inputs.platform == 'all'
+      github.event.inputs.build_target == 'android-apk' ||
+      github.event.inputs.build_target == 'android-aab' ||
+      github.event.inputs.build_target == 'android-both' ||
+      github.event.inputs.build_target == 'all'
 
     steps:
       - name: Checkout code
@@ -110,20 +104,23 @@ jobs:
 
       - name: Build Android APK
         if: |
-          github.event.inputs.android_output == 'apk' ||
-          github.event.inputs.android_output == 'both'
+          github.event.inputs.build_target == 'android-apk' ||
+          github.event.inputs.build_target == 'android-both' ||
+          github.event.inputs.build_target == 'all'
         run: flutter build apk --release
 
       - name: Build Android AAB
         if: |
-          github.event.inputs.android_output == 'aab' ||
-          github.event.inputs.android_output == 'both'
+          github.event.inputs.build_target == 'android-aab' ||
+          github.event.inputs.build_target == 'android-both' ||
+          github.event.inputs.build_target == 'all'
         run: flutter build appbundle --release
 
       - name: Upload APK Artifact
         if: |
-          github.event.inputs.android_output == 'apk' ||
-          github.event.inputs.android_output == 'both'
+          github.event.inputs.build_target == 'android-apk' ||
+          github.event.inputs.build_target == 'android-both' ||
+          github.event.inputs.build_target == 'all'
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
@@ -132,8 +129,9 @@ jobs:
 
       - name: Upload AAB Artifact
         if: |
-          github.event.inputs.android_output == 'aab' ||
-          github.event.inputs.android_output == 'both'
+          github.event.inputs.build_target == 'android-aab' ||
+          github.event.inputs.build_target == 'android-both' ||
+          github.event.inputs.build_target == 'all'
         uses: actions/upload-artifact@v4
         with:
           name: android-aab
@@ -145,8 +143,8 @@ jobs:
     runs-on: windows-latest
 
     if: |
-      github.event.inputs.platform == 'windows' ||
-      github.event.inputs.platform == 'all'
+      github.event.inputs.build_target == 'windows' ||
+      github.event.inputs.build_target == 'all'
 
     steps:
       - name: Checkout code
