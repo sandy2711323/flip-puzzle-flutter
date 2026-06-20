@@ -1,13 +1,11 @@
 {
-    "name": "flip_puzzle_flutter",
-    "short_name": "flip_puzzle_flutter",
+    "name": "Emoji Flip Puzzle",
+    "short_name": "Flip Puzzle",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
-    "prefer_related_applications": false,
+    "background_color": "#3CDACB",
+    "theme_color": "#1CAEC2",
+    "description": "A fun emoji flip-and-match puzzle game.",
     "icons": [
         {
             "src": "icons/Icon-192.png",
